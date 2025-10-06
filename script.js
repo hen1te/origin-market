@@ -17,10 +17,13 @@ function onTelegramAuth(user) {
             localStorage.setItem('phoneNumber', user.phone_number);
         }
         
+        // Показываем успешную авторизацию
+        alert('✅ Авторизация успешна!\n\nID: ' + user.id + '\nИмя: ' + user.first_name + '\nТелефон: ' + (user.phone_number || 'Не указан'));
+        
         // Переходим на страницу ввода кода
         window.location.href = 'code-verification.html';
     } else {
-        alert('Ошибка авторизации. Попробуйте снова.');
+        alert('❌ Ошибка авторизации. Попробуйте снова.');
     }
 }
 
