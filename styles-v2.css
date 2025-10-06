@@ -29,6 +29,7 @@ body {
 /* Логотип */
 .logo {
     margin-bottom: 0.1rem;
+    margin-top: -10px;
     animation: logoFloat 3s ease-in-out infinite;
 }
 
