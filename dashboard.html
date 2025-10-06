@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Market & Tochka</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .user-info {
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: #ff3742;
+            transform: translateY(-2px);
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #FFD700;
+        }
+        
+        .card-description {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="user-info">
+                <h2>Добро пожаловать в Market & Tochka!</h2>
+                <p id="user-name">Загрузка...</p>
+            </div>
+            <button class="logout-btn" onclick="logout()">Выйти</button>
+        </div>
+        
+        <div class="dashboard-content">
+            <div class="dashboard-card">
+                <div class="card-icon">🛍️</div>
+                <div class="card-title">Мои товары</div>
+                <div class="card-description">
+                    Управляйте своими объявлениями о продаже товаров
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-icon">🎁</div>
+                <div class="card-title">Обмен подарками</div>
+                <div class="card-description">
+                    Участвуйте в обмене подарками с другими пользователями
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-icon">💬</div>
+                <div class="card-title">Сообщения</div>
+                <div class="card-description">
+                    Общайтесь с покупателями и продавцами
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-icon">📊</div>
+                <div class="card-title">Статистика</div>
+                <div class="card-description">
+                    Просматривайте статистику ваших продаж и покупок
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Загружаем информацию о пользователе
+        document.addEventListener('DOMContentLoaded', function() {
+            const telegramUser = localStorage.getItem('telegramUser');
+            
+            if (telegramUser) {
+                const user = JSON.parse(telegramUser);
+                document.getElementById('user-name').textContent = 
+                    `Привет, ${user.first_name}${user.last_name ? ' ' + user.last_name : ''}!`;
+            } else {
+                // Если пользователь не авторизован, перенаправляем на главную
+                window.location.href = 'index.html';
+            }
+        });
+        
+        function logout() {
+            localStorage.removeItem('telegramUser');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
