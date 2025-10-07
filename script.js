@@ -1,6 +1,6 @@
 // Функция запроса номера телефона через Telegram WebApp
 function requestPhoneNumber() {
-    console.log('🔍 Проверяем Telegram WebApp API...');
+    showDebugInfo('🔍 Проверяем Telegram WebApp API...');
     
     // Ждем загрузки Telegram WebApp API
     let attempts = 0;
@@ -8,10 +8,10 @@ function requestPhoneNumber() {
     
     const checkAndRequestContact = () => {
         attempts++;
-        console.log(`🔍 Попытка ${attempts}/${maxAttempts}: window.Telegram =`, window.Telegram);
+        showDebugInfo(`🔍 Попытка ${attempts}/${maxAttempts}: window.Telegram = ${window.Telegram ? 'ЕСТЬ' : 'НЕТ'}`);
         
         if (window.Telegram && window.Telegram.WebApp) {
-            console.log('✅ Telegram WebApp API доступен!');
+            showDebugInfo('✅ Telegram WebApp API доступен!');
             
             // Инициализируем WebApp
             window.Telegram.WebApp.ready();
@@ -19,7 +19,7 @@ function requestPhoneNumber() {
             
             // Запрашиваем номер телефона
             window.Telegram.WebApp.requestContact((contact) => {
-                console.log('📱 Получен контакт:', contact);
+                showDebugInfo('📱 Получен контакт: ' + (contact ? 'ДА' : 'НЕТ'));
                 if (contact && contact.phone_number) {
                     // Сохраняем номер
                     localStorage.setItem('phoneNumber', contact.phone_number);
@@ -37,10 +37,10 @@ function requestPhoneNumber() {
         }
         
         if (attempts < maxAttempts) {
-            console.log('⏳ Ждем загрузки Telegram WebApp API...');
+            showDebugInfo('⏳ Ждем загрузки Telegram WebApp API...');
             setTimeout(checkAndRequestContact, 100);
         } else {
-            console.log('❌ Telegram WebApp API не загрузился за 1 секунду');
+            showDebugInfo('❌ Telegram WebApp API не загрузился за 1 секунду');
             alert('❌ Это приложение работает только в Telegram!');
         }
     };
@@ -89,9 +89,42 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+// Функция для отображения отладочной информации
+function showDebugInfo(message) {
+    // Создаем элемент для отладки, если его нет
+    let debugDiv = document.getElementById('debug-info');
+    if (!debugDiv) {
+        debugDiv = document.createElement('div');
+        debugDiv.id = 'debug-info';
+        debugDiv.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 9999;
+            max-width: 300px;
+            word-wrap: break-word;
+        `;
+        document.body.appendChild(debugDiv);
+    }
+    
+    // Добавляем сообщение
+    debugDiv.innerHTML += '<br>' + message;
+    
+    // Ограничиваем количество сообщений
+    const lines = debugDiv.innerHTML.split('<br>');
+    if (lines.length > 10) {
+        debugDiv.innerHTML = lines.slice(-10).join('<br>');
+    }
+}
+
 // Проверка Telegram WebApp API при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔍 Проверяем Telegram WebApp API при загрузке...');
+    showDebugInfo('🔍 Проверяем Telegram WebApp API при загрузке...');
     
     // Ждем загрузки Telegram WebApp API
     let attempts = 0;
@@ -99,10 +132,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const checkTelegramAPI = () => {
         attempts++;
-        console.log(`🔍 Попытка ${attempts}/${maxAttempts}: window.Telegram =`, window.Telegram);
+        showDebugInfo(`🔍 Попытка ${attempts}/${maxAttempts}: window.Telegram = ${window.Telegram ? 'ЕСТЬ' : 'НЕТ'}`);
         
         if (window.Telegram && window.Telegram.WebApp) {
-            console.log('✅ Telegram WebApp API доступен!');
+            showDebugInfo('✅ Telegram WebApp API доступен!');
             // Инициализируем WebApp
             window.Telegram.WebApp.ready();
             window.Telegram.WebApp.expand();
@@ -110,10 +143,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (attempts < maxAttempts) {
-            console.log('⏳ Ждем загрузки Telegram WebApp API...');
+            showDebugInfo('⏳ Ждем загрузки Telegram WebApp API...');
             setTimeout(checkTelegramAPI, 100);
         } else {
-            console.log('❌ Telegram WebApp API не загрузился за 1 секунду');
+            showDebugInfo('❌ Telegram WebApp API не загрузился за 1 секунду');
         }
     };
     
