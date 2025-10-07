@@ -1,55 +1,55 @@
-// Проверка Telegram WebApp API при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-    showDebugInfo('🔍 Проверяем Telegram WebApp API при загрузке...');
+// Функция запроса номера телефона через Telegram WebApp
+function requestPhoneNumber() {
+    showDebugInfo('🔍 Запрашиваем номер телефона...');
     
-    // Ждем загрузки скрипта Telegram WebApp
-    let attempts = 0;
-    const maxAttempts = 20;
-    
-    const checkTelegramAPI = () => {
-        attempts++;
-        showDebugInfo(`🔍 Попытка ${attempts}/${maxAttempts}: window.Telegram = ${window.Telegram ? 'ЕСТЬ' : 'НЕТ'}`);
+    // Проверяем, что Telegram WebApp API доступен
+    if (window.Telegram && window.Telegram.WebApp) {
+        showDebugInfo('✅ Telegram WebApp API доступен!');
         
-        if (window.Telegram && window.Telegram.WebApp) {
-            showDebugInfo('✅ Telegram WebApp API доступен!');
-            // Инициализируем WebApp
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-            return;
-        }
+        // Инициализируем WebApp
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
         
-        if (attempts < maxAttempts) {
-            showDebugInfo('⏳ Ждем загрузки Telegram WebApp API...');
-            setTimeout(checkTelegramAPI, 200);
-        } else {
-            showDebugInfo('❌ Telegram WebApp API не загрузился');
-            // Пытаемся загрузить скрипт вручную
-            loadTelegramScript();
-        }
-    };
-    
-    // Начинаем проверку
-    checkTelegramAPI();
-});
+        // Запрашиваем номер телефона
+        window.Telegram.WebApp.requestContact((contact) => {
+            showDebugInfo('📱 Получен контакт: ' + (contact ? 'ДА' : 'НЕТ'));
+            if (contact && contact.phone_number) {
+                // Сохраняем номер
+                localStorage.setItem('phoneNumber', contact.phone_number);
+                
+                // Отправляем запрос на отправку кода боту
+                sendCodeToBot(contact.phone_number);
+                
+                // Переходим на страницу ввода кода
+                window.location.href = 'code-verification.html';
+            } else {
+                alert('❌ Не удалось получить номер телефона');
+            }
+        });
+    } else {
+        showDebugInfo('❌ Telegram WebApp API недоступен');
+        alert('❌ Это приложение работает только в Telegram!');
+    }
+}
 
-// Функция для загрузки скрипта Telegram WebApp вручную
-function loadTelegramScript() {
-    showDebugInfo('🔄 Пытаемся загрузить скрипт Telegram WebApp вручную...');
-    
-    const script = document.createElement('script');
-    script.src = 'https://telegram.org/js/telegram-web-app.js?59';
-    script.onload = function() {
-        showDebugInfo('✅ Скрипт Telegram WebApp загружен вручную!');
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-        }
-    };
-    script.onerror = function() {
-        showDebugInfo('❌ Не удалось загрузить скрипт Telegram WebApp');
-    };
-    document.head.appendChild(script);
-}idden';
+// Функция отправки запроса на код боту
+function sendCodeToBot(phone) {
+    if (window.Telegram && window.Telegram.WebApp) {
+        const data = {
+            action: 'send_code',
+            phone: phone
+        };
+        
+        // Отправляем данные боту
+        window.Telegram.WebApp.sendData(JSON.stringify(data));
+        console.log('📱 Запрос на отправку кода отправлен боту');
+    }
+}
+
+// Функции для модального окна
+function showPrivacyModal() {
+    document.getElementById('privacyModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
 }
 
 function closePrivacyModal() {
@@ -109,51 +109,23 @@ function showDebugInfo(message) {
 document.addEventListener('DOMContentLoaded', function() {
     showDebugInfo('🔍 Проверяем Telegram WebApp API при загрузке...');
     
-    // Ждем загрузки скрипта Telegram WebApp
-    let attempts = 0;
-    const maxAttempts = 20;
-    
-    const checkTelegramAPI = () => {
-        attempts++;
-        showDebugInfo(`🔍 Попытка ${attempts}/${maxAttempts}: window.Telegram = ${window.Telegram ? 'ЕСТЬ' : 'НЕТ'}`);
-        
-        if (window.Telegram && window.Telegram.WebApp) {
-            showDebugInfo('✅ Telegram WebApp API доступен!');
-            // Инициализируем WebApp
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-            return;
-        }
-        
-        if (attempts < maxAttempts) {
-            showDebugInfo('⏳ Ждем загрузки Telegram WebApp API...');
-            setTimeout(checkTelegramAPI, 200);
-        } else {
-            showDebugInfo('❌ Telegram WebApp API не загрузился');
-            // Пытаемся загрузить скрипт вручную
-            loadTelegramScript();
-        }
-    };
-    
-    // Начинаем проверку
-    checkTelegramAPI();
+    // Простая проверка
+    if (window.Telegram && window.Telegram.WebApp) {
+        showDebugInfo('✅ Telegram WebApp API доступен!');
+        // Инициализируем WebApp
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+    } else {
+        showDebugInfo('❌ Telegram WebApp API недоступен');
+        // Ждем немного и проверяем снова
+        setTimeout(() => {
+            if (window.Telegram && window.Telegram.WebApp) {
+                showDebugInfo('✅ Telegram WebApp API загрузился позже!');
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
+            } else {
+                showDebugInfo('❌ Telegram WebApp API так и не загрузился');
+            }
+        }, 1000);
+    }
 });
-
-// Функция для загрузки скрипта Telegram WebApp вручную
-function loadTelegramScript() {
-    showDebugInfo('🔄 Пытаемся загрузить скрипт Telegram WebApp вручную...');
-    
-    const script = document.createElement('script');
-    script.src = 'https://telegram.org/js/telegram-web-app.js?59';
-    script.onload = function() {
-        showDebugInfo('✅ Скрипт Telegram WebApp загружен вручную!');
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-        }
-    };
-    script.onerror = function() {
-        showDebugInfo('❌ Не удалось загрузить скрипт Telegram WebApp');
-    };
-    document.head.appendChild(script);
-}
