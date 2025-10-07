@@ -6,7 +6,7 @@ function requestPhoneNumber() {
         window.Telegram.WebApp.ready();
         window.Telegram.WebApp.expand();
         
-        // Запрашиваем номер телефона
+        // Запрашиваем номер телефона (ТОЛЬКО через Telegram WebApp!)
         window.Telegram.WebApp.requestContact((contact) => {
             if (contact && contact.phone_number) {
                 // Сохраняем номер
@@ -22,14 +22,8 @@ function requestPhoneNumber() {
             }
         });
     } else {
-        // Fallback для тестирования вне Telegram
-        const phone = prompt('Введите ваш номер телефона (например: +380123456789):');
-        if (phone && phone.trim()) {
-            localStorage.setItem('phoneNumber', phone.trim());
-            setTimeout(() => {
-                window.location.href = 'code-verification.html';
-            }, 1000);
-        }
+        // Если не в Telegram - показываем ошибку
+        alert('❌ Это приложение работает только в Telegram!');
     }
 }
 
