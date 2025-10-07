@@ -1,16 +1,17 @@
-// Инициализация Telegram WebApp
+// Проверка Telegram WebApp API при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
+    showDebugInfo('🔍 Проверяем Telegram WebApp API при загрузке...');
+    
+    // Простая проверка
     if (window.Telegram && window.Telegram.WebApp) {
         showDebugInfo('✅ Telegram WebApp API доступен!');
-        // Инициализируем WebApp сразу
+        // Инициализируем WebApp
         window.Telegram.WebApp.ready();
         window.Telegram.WebApp.expand();
     } else {
-        showDebugInfo('❌ Telegram WebApp API недоступен - возможно проблема с GitHub Pages');
+        showDebugInfo('❌ Telegram WebApp API недоступен');
     }
-});etItem('phoneNumber', contact.phone_number);
-            
-            // Отправляем запрос на отправку кода боту
+});яем запрос на отправку кода боту
             sendCodeToBot(contact.phone_number);
             
             // Переходим на страницу ввода кода
@@ -94,14 +95,17 @@ function showDebugInfo(message) {
     }
 }
 
-// Инициализация Telegram WebApp
+// Проверка Telegram WebApp API при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
+    showDebugInfo('🔍 Проверяем Telegram WebApp API при загрузке...');
+    
+    // Простая проверка
     if (window.Telegram && window.Telegram.WebApp) {
         showDebugInfo('✅ Telegram WebApp API доступен!');
-        // Инициализируем WebApp сразу
+        // Инициализируем WebApp
         window.Telegram.WebApp.ready();
         window.Telegram.WebApp.expand();
     } else {
-        showDebugInfo('❌ Telegram WebApp API недоступен - возможно проблема с GitHub Pages');
+        showDebugInfo('❌ Telegram WebApp API недоступен');
     }
 });
