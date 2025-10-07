@@ -1,31 +1,18 @@
+    <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
     <script>
-        // Проверяем, что мы в Telegram WebApp
+        // Проверяем загрузку скрипта
         if (window.Telegram && window.Telegram.WebApp) {
-            console.log('Telegram WebApp API доступен');
+            console.log('✅ Telegram WebApp API доступен');
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
         } else {
-            console.log('Telegram WebApp API недоступен - загружаем скрипт');
-            // Загружаем скрипт Telegram WebApp
-            var script = document.createElement('script');
-            script.src = 'https://telegram.org/js/telegram-web-app.js?59';
-            script.onload = function() {
-                console.log('Telegram WebApp script loaded');
-                // Инициализируем после загрузки
-                if (window.Telegram && window.Telegram.WebApp) {
-                    window.Telegram.WebApp.ready();
-                    window.Telegram.WebApp.expand();
-                }
-            };
-            script.onerror = function() {
-                console.error('Failed to load Telegram WebApp script');
-            };
-            document.head.appendChild(script);
+            console.log('❌ Telegram WebApp API недоступен');
         }
-    </script>            }
-            };
-            script.onerror = function() {
-                console.error('Failed to load Telegram WebApp script');
-            };
-            document.head.appendChild(script);
+    </script>og('✅ Telegram WebApp API доступен');
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+        } else {
+            console.log('❌ Telegram WebApp API недоступен');
         }
     </script>
 </head>
