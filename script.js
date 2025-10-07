@@ -1,13 +1,20 @@
 // Функция запроса номера телефона через Telegram WebApp
 function requestPhoneNumber() {
+    console.log('🔍 Проверяем Telegram WebApp API...');
+    console.log('window.Telegram:', window.Telegram);
+    console.log('window.Telegram.WebApp:', window.Telegram?.WebApp);
+    
     // Проверяем, запущено ли приложение в Telegram
     if (window.Telegram && window.Telegram.WebApp) {
+        console.log('✅ Telegram WebApp API доступен');
+        
         // Инициализируем WebApp
         window.Telegram.WebApp.ready();
         window.Telegram.WebApp.expand();
         
-        // Запрашиваем номер телефона (ТОЛЬКО через Telegram WebApp!)
+        // Запрашиваем номер телефона
         window.Telegram.WebApp.requestContact((contact) => {
+            console.log('📱 Получен контакт:', contact);
             if (contact && contact.phone_number) {
                 // Сохраняем номер
                 localStorage.setItem('phoneNumber', contact.phone_number);
@@ -22,6 +29,7 @@ function requestPhoneNumber() {
             }
         });
     } else {
+        console.log('❌ Telegram WebApp API недоступен');
         // Если не в Telegram - показываем ошибку
         alert('❌ Это приложение работает только в Telegram!');
     }
@@ -64,5 +72,21 @@ window.onclick = function(event) {
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closePrivacyModal();
+    }
+});
+
+// Проверка Telegram WebApp API при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔍 Проверяем Telegram WebApp API при загрузке...');
+    console.log('window.Telegram:', window.Telegram);
+    console.log('window.Telegram.WebApp:', window.Telegram?.WebApp);
+    
+    if (window.Telegram && window.Telegram.WebApp) {
+        console.log('✅ Telegram WebApp API доступен при загрузке');
+        // Инициализируем WebApp
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+    } else {
+        console.log('❌ Telegram WebApp API недоступен при загрузке');
     }
 });
