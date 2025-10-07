@@ -1,7 +1,33 @@
-    <script src="https://telegram.org/js/telegram-web-app.js?59"></script>ta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Origin Market</title>
-    <link rel="stylesheet" href="styles-v2.css?v=4">
-    <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
+    <script>
+        // Проверяем, что мы в Telegram WebApp
+        if (window.Telegram && window.Telegram.WebApp) {
+            console.log('Telegram WebApp API доступен');
+        } else {
+            console.log('Telegram WebApp API недоступен - загружаем скрипт');
+            // Загружаем скрипт Telegram WebApp
+            var script = document.createElement('script');
+            script.src = 'https://telegram.org/js/telegram-web-app.js?59';
+            script.onload = function() {
+                console.log('Telegram WebApp script loaded');
+                // Инициализируем после загрузки
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.ready();
+                    window.Telegram.WebApp.expand();
+                }
+            };
+            script.onerror = function() {
+                console.error('Failed to load Telegram WebApp script');
+            };
+            document.head.appendChild(script);
+        }
+    </script>            }
+            };
+            script.onerror = function() {
+                console.error('Failed to load Telegram WebApp script');
+            };
+            document.head.appendChild(script);
+        }
+    </script>
 </head>
 <body>
     <div class="container" style="transform: scale(0.85);">
